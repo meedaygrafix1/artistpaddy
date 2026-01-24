@@ -43,57 +43,45 @@ export default function LegalCopilot() {
         })
     }, [translate]);
 
-    const handleSend = () => {
+    const [isLoading, setIsLoading] = useState(false);
+
+    const handleSend = async () => {
         if (!input.trim()) return;
 
-        const userMsg = input.trim().toLowerCase();
-        setMessages(prev => [...prev, { role: 'user', text: input }]);
+        const userMsg = input.trim();
+        const newMessages = [...messages, { role: 'user', text: userMsg } as Message];
+        setMessages(newMessages);
         setInput('');
+        setIsLoading(true);
 
-        // Simulate AI Delay
-        setTimeout(() => {
-            let response = "";
+        try {
+            const res = await fetch('/api/legal/chat', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    message: userMsg,
+                    previousMessages: messages.map(m => ({ role: m.role, text: m.text }))
+                }),
+            });
 
-            // Keyword "AI" Logic
-            if (userMsg.includes("perpetuity") || userMsg.includes("forever")) {
-                response = translate(
-                    "⚠️ DANGER: 'Perpetuity' means FOREVER. If you sign this, you never get your rights back. Never!",
-                    "⚠️ WAHALA: 'Perpetuity' mean say dem don carry your market GO. You no go see am again FOREVER. No gree o!"
-                );
-            } else if (userMsg.includes("360") || userMsg.includes("three sixty")) {
-                response = translate(
-                    "A 360 Deal means the label takes a % of EVERYTHING: Shows, Endorsements, Merch, and Music. Usually 15-30% of net income.",
-                    "360 Deal mean say dem go chop from everywhere: Show money, endorsement, even if you sell pure water. Dem go collect their share."
-                );
-            } else if (userMsg.includes("advance")) {
-                response = translate(
-                    "An Advance is NOT free money. It is a LOAN you pay back with your earnings. You don't get royalties until it's paid back.",
-                    "Advance no be dash o! Na GBESE. Na loan wey you go pay back with your music money. If you chop am finish, hunger fit wire you."
-                );
-            } else if (userMsg.includes("master") || userMsg.includes("own the song")) {
-                response = translate(
-                    "Masters are the ownership of the recording. If the label owns the masters, they control the song. Try to negotiate a reversion clause.",
-                    "Masters na who get the song. If label hold am, na dem get final say. Try tell dem say after 5-10 years, make dem return am give you."
-                );
-            } else if (userMsg.includes("recoup")) {
-                response = translate(
-                    "Recoupable means you must pay it back. Non-recoupable is better (like a fee), but rare for advances.",
-                    "Recoupable mean say na debt. Dem must collect am back from your streaming money."
-                );
-            } else if (userMsg.includes("lawyer")) {
-                response = translate(
-                    "Always get a music lawyer to read your contract. I am a robot, not a substitute for a real lawyer!",
-                    "Find correct lawyer o! Me na robot, I no fit go court for you. No dey do 'I can read it myself'."
-                );
-            } else {
-                response = translate(
-                    "I didn't catch that specific legal term. Try asking about 'Masters', 'Advance', or '360 Deals'.",
-                    "I no grab dat one. Ask me about 'Masters', 'Advance', or '360' make I explain give you."
-                );
+            const data = await res.json();
+
+            if (!res.ok) {
+                throw new Error(data.error || 'Failed to get response');
             }
 
-            setMessages(prev => [...prev, { role: 'bot', text: response }]);
-        }, 600);
+            setMessages(prev => [...prev, { role: 'bot', text: data.response }]);
+        } catch (error) {
+            setMessages(prev => [...prev, {
+                role: 'bot',
+                text: translate(
+                    "Sorry, I'm having trouble connecting to the legal database right now. Please try again.",
+                    "No vex, network or server dey mess up. Try ask me again small time."
+                )
+            }]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleKeyPress = (e: React.KeyboardEvent) => {
@@ -131,8 +119,8 @@ export default function LegalCopilot() {
                             {/* Bubble */}
                             <div
                                 className={`p-4 rounded-2xl text-sm leading-relaxed ${msg.role === 'user'
-                                        ? 'bg-slate-900 text-white rounded-tr-none'
-                                        : 'bg-white text-slate-700 border border-slate-200 rounded-tl-none shadow-sm'
+                                    ? 'bg-slate-900 text-white rounded-tr-none'
+                                    : 'bg-white text-slate-700 border border-slate-200 rounded-tl-none shadow-sm'
                                     }`}
                             >
                                 {msg.text}
@@ -140,6 +128,20 @@ export default function LegalCopilot() {
                         </div>
                     </div>
                 ))}
+                {isLoading && (
+                    <div className="flex justify-start">
+                        <div className="flex gap-3 max-w-[80%] flex-row">
+                            <div className="w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-brand-600 text-white">
+                                <Bot size={14} />
+                            </div>
+                            <div className="p-4 rounded-2xl text-sm leading-relaxed bg-white text-slate-700 border border-slate-200 rounded-tl-none shadow-sm flex items-center gap-2">
+                                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce"></span>
+                                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.2s]"></span>
+                                <span className="w-2 h-2 bg-slate-400 rounded-full animate-bounce [animation-delay:0.4s]"></span>
+                            </div>
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* Input Area */}
@@ -151,6 +153,7 @@ export default function LegalCopilot() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyPress}
+                        disabled={isLoading}
                     />
                     <button
                         onClick={handleSend}
