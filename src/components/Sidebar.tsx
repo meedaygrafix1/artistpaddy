@@ -28,27 +28,27 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
 
                 {/* Brand */}
                 <div className="p-8 pb-4 shrink-0">
-                    <h1 className="font-bold text-xl tracking-tight text-slate-900 flex items-center gap-2">
-                        <img src="/logo.png" alt="Logo" className="w-8 h-8 object-contain" />
+                    <h1 className="font-bold text-2xl tracking-tight text-slate-900 flex items-center gap-3">
+                        <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
                         <span>ArtistPaddy</span>
                     </h1>
                 </div>
 
                 {/* Navigation */}
-                <div className="flex-1 px-4 py-4 space-y-1 overflow-y-auto">
-                    <div className="ml-4 mb-2 text-[10px] font-bold text-slate-400 uppercase tracking-widest">Main</div>
+                <div className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+                    <div className="ml-4 mb-3 text-xs font-bold text-slate-400 uppercase tracking-widest">Main</div>
                     {menuItems.map((item) => {
                         const isActive = activeTab === item.id;
                         return (
                             <button
                                 key={item.id}
                                 onClick={() => setActiveTab(item.id)}
-                                className={`w-full flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-200 group text-sm ${isActive
+                                className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-200 group text-base ${isActive
                                     ? 'bg-slate-100 text-black font-semibold'
                                     : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                                     }`}
                             >
-                                <item.icon size={18} className={`transition-colors ${isActive ? 'text-black' : 'text-slate-400 group-hover:text-slate-600'}`} />
+                                <item.icon size={22} className={`transition-colors ${isActive ? 'text-black' : 'text-slate-400 group-hover:text-slate-600'}`} />
                                 <span>{item.label}</span>
                             </button>
                         );
@@ -56,33 +56,33 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                 </div>
 
                 {/* Bottom Actions */}
-                <div className="p-4 border-t border-slate-100 space-y-1 shrink-0">
+                <div className="p-4 border-t border-slate-100 space-y-2 shrink-0">
                     <button
                         onClick={() => setActiveTab('settings')}
-                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 ${activeTab === 'settings'
+                        className={`w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-base ${activeTab === 'settings'
                             ? 'bg-slate-100 text-slate-900 font-medium'
                             : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900'
                             }`}
                     >
-                        <Settings size={20} />
+                        <Settings size={22} />
                         <span>{translate('Settings', 'Settings')}</span>
                     </button>
 
                     <button
                         onClick={() => setShowLogoutModal(true)}
-                        className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl transition-all duration-300 text-slate-500 hover:bg-red-50 hover:text-fintech-danger"
+                        className="w-full flex items-center gap-4 px-4 py-3 rounded-xl transition-all duration-300 text-base text-slate-500 hover:bg-red-50 hover:text-fintech-danger"
                     >
-                        <LogOut size={20} />
+                        <LogOut size={22} />
                         <span>{translate('Logout', 'Log Out')}</span>
                     </button>
 
-                    <div className="mt-4 pt-4 flex items-center gap-3 px-4">
-                        <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-sm">
+                    <div className="mt-4 pt-4 flex items-center gap-4 px-4">
+                        <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-base">
                             OL
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="text-sm font-bold text-slate-900 truncate">Olami</p>
-                            <p className="text-xs text-slate-500 truncate">Artist Account</p>
+                            <p className="text-base font-bold text-slate-900 truncate">Olami</p>
+                            <p className="text-sm text-slate-500 truncate">Artist Account</p>
                         </div>
                     </div>
                 </div>
