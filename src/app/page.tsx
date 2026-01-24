@@ -40,7 +40,7 @@ function Dashboard() {
             <div className="flex items-end justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{translate("Dashboard", "Dashboard")}</h2>
-                <p className="text-slate-500 mt-1">{translate(`Welcome back, ${userName || 'there'}.`, `How far, ${userName || 'boss'}`)}</p>
+                <p className="text-slate-500 mt-1">{translate(`Welcome back, ${userName.split(' ')[0] || 'there'}.`, `How far, ${userName.split(' ')[0] || 'boss'}`)}</p>
               </div>
               <div className="flex items-center gap-3">
                 <button

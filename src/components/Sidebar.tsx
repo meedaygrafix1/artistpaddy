@@ -108,7 +108,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                             {getInitials(userName)}
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="text-base font-bold text-slate-900 truncate">{userName || 'Loading...'}</p>
+                            <p className="text-base font-bold text-slate-900 truncate">{userName.split(' ')[0] || 'Loading...'}</p>
                             <p className="text-sm text-slate-500 truncate">Artist Account</p>
                         </div>
                     </div>
