@@ -1,6 +1,6 @@
 "use client";
 
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { LayoutDashboard, Calculator, Scale, Settings, LogOut, ShieldCheck, BookOpen } from 'lucide-react';
 import { useLanguage } from './LanguageContext';
@@ -20,7 +20,34 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
         { id: 'education', label: translate('Education', 'Learn Work'), icon: BookOpen },
     ];
 
-    const [showLogoutModal, setShowLogoutModal] = React.useState(false);
+    const [showLogoutModal, setShowLogoutModal] = useState(false);
+    const [userName, setUserName] = useState('');
+
+    // Fetch user data on mount
+    useEffect(() => {
+        const fetchUser = async () => {
+            try {
+                const res = await fetch('/api/auth/me');
+                if (res.ok) {
+                    const data = await res.json();
+                    setUserName(data.user?.name || '');
+                }
+            } catch (error) {
+                console.error('Failed to fetch user:', error);
+            }
+        };
+        fetchUser();
+    }, []);
+
+    // Get initials from name
+    const getInitials = (name: string) => {
+        if (!name) return '??';
+        const parts = name.trim().split(' ');
+        if (parts.length >= 2) {
+            return (parts[0][0] + parts[1][0]).toUpperCase();
+        }
+        return name.substring(0, 2).toUpperCase();
+    };
 
     return (
         <>
@@ -78,10 +105,10 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
 
                     <div className="mt-4 pt-4 flex items-center gap-4 px-4">
                         <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-600 font-bold text-base">
-                            OL
+                            {getInitials(userName)}
                         </div>
                         <div className="flex-1 overflow-hidden">
-                            <p className="text-base font-bold text-slate-900 truncate">Olami</p>
+                            <p className="text-base font-bold text-slate-900 truncate">{userName || 'Loading...'}</p>
                             <p className="text-sm text-slate-500 truncate">Artist Account</p>
                         </div>
                     </div>

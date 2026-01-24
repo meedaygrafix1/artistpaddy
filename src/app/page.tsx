@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { LanguageProvider, useLanguage } from "../components/LanguageContext";
 import DealSimulator from "../components/DealSimulator";
 import LegalCopilot from "../components/LegalCopilot";
@@ -11,6 +11,23 @@ function Dashboard() {
   const { translate, toggleLanguage, language } = useLanguage();
   const [activeTab, setActiveTab] = useState('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [userName, setUserName] = useState('');
+
+  // Fetch user data on mount
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('/api/auth/me');
+        if (res.ok) {
+          const data = await res.json();
+          setUserName(data.user?.name || '');
+        }
+      } catch (error) {
+        console.error('Failed to fetch user:', error);
+      }
+    };
+    fetchUser();
+  }, []);
 
   // Content Renderer
   const renderContent = () => {
@@ -23,7 +40,7 @@ function Dashboard() {
             <div className="flex items-end justify-between mb-8">
               <div>
                 <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{translate("Dashboard", "Dashboard")}</h2>
-                <p className="text-slate-500 mt-1">{translate("Welcome back, Olami.", "How far, Olami.")}</p>
+                <p className="text-slate-500 mt-1">{translate(`Welcome back, ${userName || 'there'}.`, `How far, ${userName || 'boss'}`)}</p>
               </div>
               <div className="flex items-center gap-3">
                 <button
