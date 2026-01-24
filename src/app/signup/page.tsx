@@ -30,6 +30,13 @@ export default function SignUpPage() {
             return;
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(formData.email)) {
+            setError("Please enter a valid email address");
+            setLoading(false);
+            return;
+        }
+
         try {
             const res = await fetch('/api/auth/signup', {
                 method: 'POST',

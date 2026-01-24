@@ -9,7 +9,7 @@ import { Menu, Globe, Bell, Moon } from "lucide-react";
 
 function Dashboard() {
   const { translate, toggleLanguage, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('simulator');
+  const [activeTab, setActiveTab] = useState('dashboard');
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Content Renderer
@@ -124,7 +124,7 @@ function Dashboard() {
                 {translate("Deal Simulator", "Shark Detector")}
               </h2>
               <p className="text-slate-500">
-                {translate("Vizualize the financial outcome of your contract.", "See clean clear how the money go share.")}
+                {translate("Visualize the financial outcome of your contract.", "See clean clear how the money go share.")}
               </p>
             </div>
             <DealSimulator />
