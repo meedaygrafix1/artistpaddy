@@ -64,7 +64,7 @@ function Dashboard() {
               {/* Simulator Card */}
               <div
                 onClick={() => setActiveTab('simulator')}
-                className="group bg-emerald-50/70 hover:bg-emerald-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden"
+                className="group bg-emerald-50/70 hover:bg-emerald-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden border border-slate-200/60"
               >
                 <div className="flex justify-between items-start mb-4">
                   <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Tool</span>
@@ -76,7 +76,7 @@ function Dashboard() {
                 <p className="text-sm text-slate-600 leading-relaxed mb-4">
                   {translate("Analyze contract splits and debt.", "Check if deal make sense.")}
                 </p>
-                <button className="w-full py-2.5 bg-black hover:bg-slate-800 text-white rounded-xl text-sm font-semibold transition-colors">
+                <button className="w-full py-2.5 border border-slate-300 hover:border-slate-400 bg-transparent hover:bg-white/50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">
                   {translate("Analyze Deal", "Check Deal")}
                 </button>
               </div>
@@ -84,7 +84,7 @@ function Dashboard() {
               {/* Legal Card */}
               <div
                 onClick={() => setActiveTab('legal')}
-                className="group bg-orange-50/70 hover:bg-orange-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden"
+                className="group bg-orange-50/70 hover:bg-orange-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden border border-slate-200/60"
               >
                 <div className="flex justify-between items-start mb-4">
                   <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">AI Chat</span>
@@ -96,14 +96,14 @@ function Dashboard() {
                 <p className="text-sm text-slate-600 leading-relaxed mb-4">
                   {translate("Ask questions about contracts.", "Ask about your rights.")}
                 </p>
-                <button className="w-full py-2.5 bg-black hover:bg-slate-800 text-white rounded-xl text-sm font-semibold transition-colors">
+                <button className="w-full py-2.5 border border-slate-300 hover:border-slate-400 bg-transparent hover:bg-white/50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">
                   {translate("Ask Lawyer", "Ask Question")}
                 </button>
               </div>
 
               {/* Stats Card */}
               <div
-                className="bg-amber-50/70 p-6 rounded-2xl transition-all duration-300 relative overflow-hidden"
+                className="bg-amber-50/70 p-6 rounded-2xl transition-all duration-300 relative overflow-hidden border border-slate-200/60"
               >
                 <div className="flex justify-between items-start mb-4">
                   <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Stats</span>
