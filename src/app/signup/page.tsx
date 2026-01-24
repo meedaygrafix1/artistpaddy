@@ -67,6 +67,9 @@ export default function SignUpPage() {
         <div className="min-h-screen flex items-center justify-center bg-brand-50 p-4">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-card p-8 space-y-8 border border-brand-100">
                 <div className="text-center space-y-2">
+                    <div className="flex justify-center mb-4">
+                        <img src="/logo.png" alt="ArtistPaddy Logo" className="w-12 h-12 object-contain" />
+                    </div>
                     <h1 className="text-3xl font-bold tracking-tight text-brand-900">
                         Create an account
                     </h1>
