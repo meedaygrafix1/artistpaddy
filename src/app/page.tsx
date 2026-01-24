@@ -5,7 +5,7 @@ import { LanguageProvider, useLanguage } from "../components/LanguageContext";
 import DealSimulator from "../components/DealSimulator";
 import LegalCopilot from "../components/LegalCopilot";
 import Sidebar from "../components/Sidebar";
-import { Menu, Globe, Bell, Moon } from "lucide-react";
+import { Menu, Globe, Bell, Moon, Calculator, Scale, BarChart3 } from "lucide-react";
 
 function Dashboard() {
   const { translate, toggleLanguage, language } = useLanguage();
@@ -42,72 +42,70 @@ function Dashboard() {
             </div>
 
             {/* Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
 
               {/* Simulator Card */}
               <div
                 onClick={() => setActiveTab('simulator')}
-                className="group bg-white p-1 rounded-3xl shadow-sm hover:shadow-md transition-all cursor-pointer border border-slate-100"
+                className="group bg-emerald-50/70 hover:bg-emerald-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden"
               >
-                <div className="bg-slate-50 rounded-t-[20px] p-6 h-32 flex flex-col justify-between group-hover:bg-slate-100 transition-colors">
-                  <div className="flex justify-between items-start">
-                    <span className="bg-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-slate-200">Tool</span>
-                    <div className="p-2 bg-white rounded-lg shadow-sm">
-                      <i className="font-mono not-italic font-bold text-lg">₦</i>
-                    </div>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Tool</span>
+                  <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
+                    <Calculator className="text-emerald-600" size={24} />
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg text-slate-900 mb-1">{translate("Shark Detector", "Shark Detector")}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed mb-4">
-                    {translate("Analyze contract splits and debt.", "Check if deal make sense.")}
-                  </p>
-                  <button className="w-full py-2 bg-slate-100 text-slate-900 rounded-xl text-sm font-semibold group-hover:bg-slate-200 transition-colors">
-                    {translate("Analyze Deal", "Check Deal")}
-                  </button>
-                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-2">{translate("Shark Detector", "Shark Detector")}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  {translate("Analyze contract splits and debt.", "Check if deal make sense.")}
+                </p>
+                <button className="w-full py-2.5 bg-black hover:bg-slate-800 text-white rounded-xl text-sm font-semibold transition-colors">
+                  {translate("Analyze Deal", "Check Deal")}
+                </button>
               </div>
 
               {/* Legal Card */}
               <div
                 onClick={() => setActiveTab('legal')}
-                className="group bg-white p-1 rounded-3xl shadow-sm hover:shadow-md transition-all cursor-pointer border border-slate-100 flex flex-col"
+                className="group bg-orange-50/70 hover:bg-orange-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden"
               >
-                <div className="bg-indigo-50 rounded-t-[20px] p-6 h-32 flex flex-col justify-between group-hover:bg-indigo-100/80 transition-colors">
-                  <div className="flex justify-between items-start">
-                    <span className="bg-white px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider border border-slate-200">AI Chat</span>
-                    <Globe className="text-indigo-400" size={20} />
+                <div className="flex justify-between items-start mb-4">
+                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">AI Chat</span>
+                  <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
+                    <Scale className="text-orange-600" size={24} />
                   </div>
                 </div>
-                <div className="p-6">
-                  <h3 className="font-bold text-lg text-slate-900 mb-1">{translate("Legal Guard", "Legal Padi")}</h3>
-                  <p className="text-sm text-slate-500 leading-relaxed mb-4">
-                    {translate("Ask questions about contracts.", "Ask about your rights.")}
-                  </p>
-                  <button className="w-full py-2 bg-indigo-50 text-indigo-700 rounded-xl text-sm font-semibold group-hover:bg-indigo-100 transition-colors">
-                    {translate("Ask Lawyer", "Ask Question")}
-                  </button>
-                </div>
+                <h3 className="font-bold text-lg text-slate-900 mb-2">{translate("Legal Guard", "Legal Padi")}</h3>
+                <p className="text-sm text-slate-600 leading-relaxed mb-4">
+                  {translate("Ask questions about contracts.", "Ask about your rights.")}
+                </p>
+                <button className="w-full py-2.5 bg-black hover:bg-slate-800 text-white rounded-xl text-sm font-semibold transition-colors">
+                  {translate("Ask Lawyer", "Ask Question")}
+                </button>
               </div>
 
               {/* Stats Card */}
               <div
-                className="bg-white p-1 rounded-3xl shadow-sm border border-slate-100"
+                className="bg-amber-50/70 p-6 rounded-2xl transition-all duration-300 relative overflow-hidden"
               >
-                <div className="p-6 h-full flex flex-col justify-center">
-                  <h4 className="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4">Quick Stats</h4>
-                  <div className="space-y-4">
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm font-medium text-slate-700">Deals Checked</span>
-                      <span className="font-mono font-bold">12</span>
-                    </div>
-                    <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                      <div className="bg-black w-[60%] h-full"></div>
-                    </div>
-                    <div className="flex justify-between items-center mt-2">
-                      <span className="text-sm font-medium text-slate-700">Risk Averted</span>
-                      <span className="font-mono font-bold text-emerald-600">High</span>
-                    </div>
+                <div className="flex justify-between items-start mb-4">
+                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Stats</span>
+                  <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
+                    <BarChart3 className="text-amber-600" size={24} />
+                  </div>
+                </div>
+                <h4 className="font-bold text-lg text-slate-900 mb-4">Quick Stats</h4>
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-600">Deals Checked</span>
+                    <span className="font-mono font-bold text-slate-900">12</span>
+                  </div>
+                  <div className="w-full bg-white/60 h-2 rounded-full overflow-hidden">
+                    <div className="bg-amber-400 w-[60%] h-full rounded-full"></div>
+                  </div>
+                  <div className="flex justify-between items-center">
+                    <span className="text-sm text-slate-600">Risk Averted</span>
+                    <span className="font-mono font-bold text-emerald-600">High</span>
                   </div>
                 </div>
               </div>
