@@ -13,6 +13,8 @@ function Dashboard() {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
     const [userName, setUserName] = useState('');
 
+    const [stats, setStats] = useState({ dealsChecked: 0, highRisk: 0 });
+
     // Fetch user data on mount
     useEffect(() => {
         const fetchUser = async () => {
@@ -21,6 +23,10 @@ function Dashboard() {
                 if (res.ok) {
                     const data = await res.json();
                     setUserName(data.user?.name || '');
+                    setStats({
+                        dealsChecked: data.user?.dealsChecked || 0,
+                        highRisk: data.user?.highRiskDealsFound || 0
+                    });
                 }
             } catch (error) {
                 console.error('Failed to fetch user:', error);
@@ -115,18 +121,19 @@ function Dashboard() {
                                 <div className="space-y-3">
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Deals Checked</span>
-                                        <span className="font-mono font-bold text-slate-900">12</span>
+                                        <span className="font-mono font-bold text-slate-900">{stats.dealsChecked}</span>
                                     </div>
                                     <div className="w-full bg-white/60 h-2 rounded-full overflow-hidden">
                                         <div className="bg-amber-400 w-[60%] h-full rounded-full"></div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Risk Averted</span>
-                                        <span className="font-mono font-bold text-emerald-600">High</span>
+                                        <span className="font-mono font-bold text-emerald-600">
+                                            {stats.highRisk > 5 ? 'High' : stats.highRisk > 2 ? 'Medium' : 'Low'}
+                                        </span>
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 );

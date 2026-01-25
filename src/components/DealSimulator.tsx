@@ -276,6 +276,29 @@ export default function DealSimulator() {
                             <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 mr-2">TYPE:</span>
                             <span className="text-xs font-bold text-slate-900">{contractType}</span>
                         </div>
+
+                        <div className="mt-6">
+                            <button
+                                onClick={async () => {
+                                    const isHighRisk = yearsToRecoup > 5 || royaltySplit < 15;
+                                    try {
+                                        const res = await fetch('/api/deals/save', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ isHighRisk })
+                                        });
+                                        if (res.ok) {
+                                            alert(translate("Analysis Saved!", "We don save ham!"));
+                                        }
+                                    } catch (err) {
+                                        console.error(err);
+                                    }
+                                }}
+                                className="px-6 py-2 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10"
+                            >
+                                {translate("Save Analysis", "Save This One")}
+                            </button>
+                        </div>
                     </div>
 
                     {/* Stats Grid */}
@@ -328,6 +351,6 @@ export default function DealSimulator() {
 
                 </div>
             </div>
-        </div>
+        </div >
     );
 }

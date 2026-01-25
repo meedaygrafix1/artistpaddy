@@ -23,11 +23,27 @@ export async function GET() {
             );
         }
 
+        // Connect to DB and fetch user
+        const { default: connectToDatabase } = await import('@/lib/mongodb');
+        await connectToDatabase();
+        const { default: User } = await import('@/models/User');
+
+        const user = await User.findById(payload.id);
+
+        if (!user) {
+            return NextResponse.json(
+                { error: 'User not found' },
+                { status: 404 }
+            );
+        }
+
         return NextResponse.json({
             user: {
-                id: payload.id,
-                name: payload.name,
-                email: payload.email,
+                id: user._id,
+                name: user.name,
+                email: user.email,
+                dealsChecked: user.dealsChecked || 0,
+                highRiskDealsFound: user.highRiskDealsFound || 0
             }
         });
     } catch (error: any) {
