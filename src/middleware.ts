@@ -7,7 +7,8 @@ export async function middleware(request: NextRequest) {
     const { pathname } = request.nextUrl;
 
     // Paths that don't require authentication
-    const publicPaths = ['/signin', '/signup', '/api/auth/signin', '/api/auth/signup', '/api/auth/logout'];
+    const publicPaths = ['/', '/signin', '/signup', '/api/auth/signin', '/api/auth/signup', '/api/auth/logout'];
+
 
     // Static files and Next.js internals
     if (

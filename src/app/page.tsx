@@ -1,271 +1,217 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
-import { LanguageProvider, useLanguage } from "../components/LanguageContext";
-import DealSimulator from "../components/DealSimulator";
-import LegalCopilot from "../components/LegalCopilot";
-import Sidebar from "../components/Sidebar";
-import { Menu, Globe, Bell, Moon, Calculator, Scale, BarChart3 } from "lucide-react";
+import Link from 'next/link';
+import { ArrowRight, Calculator, Scale, BookOpen, CheckCircle, Play, Shield, Zap } from 'lucide-react';
 
-function Dashboard() {
-  const { translate, toggleLanguage, language } = useLanguage();
-  const [activeTab, setActiveTab] = useState('dashboard');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [userName, setUserName] = useState('');
+export default function LandingPage() {
+  const [isScrolled, setIsScrolled] = useState(false);
 
-  // Fetch user data on mount
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await fetch('/api/auth/me');
-        if (res.ok) {
-          const data = await res.json();
-          setUserName(data.user?.name || '');
-        }
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-      }
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
     };
-    fetchUser();
+
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Content Renderer
-  const renderContent = () => {
-    switch (activeTab) {
-      case 'dashboard':
-        return (
-          <div className="max-w-5xl space-y-8 animate-in fade-in duration-500">
-
-            {/* Greeting Section */}
-            <div className="flex items-end justify-between mb-8">
-              <div>
-                <h2 className="text-3xl font-bold text-slate-900 tracking-tight">{translate("Dashboard", "Dashboard")}</h2>
-                <p className="text-slate-500 mt-1">{translate(`Welcome back, ${userName.split(' ')[0] || 'there'}.`, `How far, ${userName.split(' ')[0] || 'boss'}`)}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={toggleLanguage}
-                  className="px-4 py-2 bg-white border border-slate-200 hover:bg-slate-50 text-slate-700 rounded-xl text-sm font-semibold transition-colors"
-                >
-                  {language === 'en' ? '🇳🇬 Pidgin' : '🇬🇧 English'}
-                </button>
-                <button
-                  onClick={() => setActiveTab('simulator')}
-                  className="bg-black text-white px-6 py-2 rounded-xl font-semibold text-sm hover:opacity-90 transition-opacity shadow-lg shadow-black/20"
-                >
-                  {translate("New Analysis", "Check Deal")}
-                </button>
-              </div>
-            </div>
-
-            {/* Cards Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-
-              {/* Simulator Card */}
-              <div
-                onClick={() => setActiveTab('simulator')}
-                className="group bg-emerald-50/70 hover:bg-emerald-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden border border-slate-200/60"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Tool</span>
-                  <div className="w-12 h-12 rounded-xl bg-emerald-100 flex items-center justify-center group-hover:bg-emerald-200 transition-colors">
-                    <Calculator className="text-emerald-600" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-bold text-lg text-slate-900 mb-2">{translate("Shark Detector", "Shark Detector")}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  {translate("Analyze contract splits and debt.", "Check if deal make sense.")}
-                </p>
-                <button className="w-full py-2.5 border border-slate-300 hover:border-slate-400 bg-transparent hover:bg-white/50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">
-                  {translate("Analyze Deal", "Check Deal")}
-                </button>
-              </div>
-
-              {/* Legal Card */}
-              <div
-                onClick={() => setActiveTab('legal')}
-                className="group bg-orange-50/70 hover:bg-orange-50 p-6 rounded-2xl cursor-pointer transition-all duration-300 relative overflow-hidden border border-slate-200/60"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">AI Chat</span>
-                  <div className="w-12 h-12 rounded-xl bg-orange-100 flex items-center justify-center group-hover:bg-orange-200 transition-colors">
-                    <Scale className="text-orange-600" size={24} />
-                  </div>
-                </div>
-                <h3 className="font-bold text-lg text-slate-900 mb-2">{translate("Legal Guard", "Legal Padi")}</h3>
-                <p className="text-sm text-slate-600 leading-relaxed mb-4">
-                  {translate("Ask questions about contracts.", "Ask about your rights.")}
-                </p>
-                <button className="w-full py-2.5 border border-slate-300 hover:border-slate-400 bg-transparent hover:bg-white/50 text-slate-700 rounded-xl text-sm font-semibold transition-colors">
-                  {translate("Ask Lawyer", "Ask Question")}
-                </button>
-              </div>
-
-              {/* Stats Card */}
-              <div
-                className="bg-amber-50/70 p-6 rounded-2xl transition-all duration-300 relative overflow-hidden border border-slate-200/60"
-              >
-                <div className="flex justify-between items-start mb-4">
-                  <span className="bg-white/80 px-2 py-1 rounded-md text-[10px] font-bold uppercase tracking-wider">Stats</span>
-                  <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center">
-                    <BarChart3 className="text-amber-600" size={24} />
-                  </div>
-                </div>
-                <h4 className="font-bold text-lg text-slate-900 mb-4">Quick Stats</h4>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">Deals Checked</span>
-                    <span className="font-mono font-bold text-slate-900">12</span>
-                  </div>
-                  <div className="w-full bg-white/60 h-2 rounded-full overflow-hidden">
-                    <div className="bg-amber-400 w-[60%] h-full rounded-full"></div>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-sm text-slate-600">Risk Averted</span>
-                    <span className="font-mono font-bold text-emerald-600">High</span>
-                  </div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        );
-
-      case 'simulator':
-        return (
-          <div className="animate-in slide-in-from-right-4 duration-500">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">
-                {translate("Deal Simulator", "Shark Detector")}
-              </h2>
-              <p className="text-slate-500">
-                {translate("Visualize the financial outcome of your contract.", "See clean clear how the money go share.")}
-              </p>
-            </div>
-            <DealSimulator />
-          </div>
-        );
-
-      case 'legal':
-        return (
-          <div className="animate-in slide-in-from-bottom-4 duration-500 h-full">
-            <LegalCopilot />
-          </div>
-        );
-
-      case 'education':
-        return (
-          <div className="max-w-4xl animate-in fade-in duration-500 space-y-6">
-            <div className="mb-6">
-              <h2 className="text-2xl font-bold text-slate-900">
-                {translate("Education Center", "Learn the Work")}
-              </h2>
-              <p className="text-slate-500">
-                {translate("Articles and guides to help you navigate the music business.", "Read updates make dem no ripper you.")}
-              </p>
-            </div>
-
-            <div className="grid gap-6">
-              {[
-                { title: "Understanding 360 Deals", desc: "Why labels want a piece of everything you earn.", tag: "Contracts", color: "bg-purple-100 text-purple-700" },
-                { title: "What is an Advance?", desc: "It's not free money. Learn how recoupment works.", tag: "Finance", color: "bg-emerald-100 text-emerald-700" },
-                { title: "Masters vs Publishing", desc: "The difference between owning the song and the recording.", tag: "Rights", color: "bg-amber-100 text-amber-700" },
-                { title: "Music Distribution 101", desc: "How to get your music on Spotify and Apple Music.", tag: "Distribution", color: "bg-blue-100 text-blue-700" },
-              ].map((article, i) => (
-                <div key={i} className="bg-white p-6 rounded-2xl border border-slate-100 hover:shadow-md transition-shadow cursor-pointer group">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${article.color}`}>
-                      {article.tag}
-                    </span>
-                  </div>
-                  <h3 className="text-lg font-bold text-slate-900 group-hover:text-brand-600 transition-colors mb-2">{article.title}</h3>
-                  <p className="text-sm text-slate-500">{article.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        );
-
-      case 'settings':
-        return (
-          <div className="max-w-2xl animate-in fade-in duration-500">
-            <h2 className="text-2xl font-bold text-slate-900 mb-6">
-              {translate("Settings", "Settings")}
-            </h2>
-
-            <div className="bg-white rounded-2xl shadow-sm border border-slate-100 overflow-hidden">
-              <div className="p-6 border-b border-slate-100 flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <div className="p-2 bg-slate-100 rounded-lg">
-                    <Globe size={20} className="text-slate-600" />
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-slate-900">{translate("Language", "Language")}</h3>
-                    <p className="text-xs text-slate-500">{translate("Toggle between English and Nigerian Pidgin", "Change between English and Pidgin")}</p>
-                  </div>
-                </div>
-                <button
-                  onClick={toggleLanguage}
-                  className="px-4 py-2 bg-slate-100 hover:bg-slate-200 rounded-lg text-sm font-semibold transition-colors"
-                >
-                  {language === 'en' ? 'English' : 'Pidgin'}
-                </button>
-              </div>
-
-            </div>
-          </div>
-        );
-
-      default:
-        return <div>Not found</div>;
-    }
-  };
-
   return (
-    <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-brand-500 selection:text-white">
+    <div className="min-h-screen bg-[#f8f9fa] font-sans text-slate-900 selection:bg-indigo-500 selection:text-white overflow-x-hidden">
 
-      {/* Sidebar (Desktop) */}
-      <div className="hidden md:block w-64 h-screen sticky top-0">
-        <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
+      {/* Background Gradients */}
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-indigo-200/40 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute top-[10%] right-[-5%] w-[30%] h-[30%] bg-purple-200/40 rounded-full blur-3xl opacity-60"></div>
+        <div className="absolute bottom-[20%] left-[20%] w-[30%] h-[30%] bg-blue-100/40 rounded-full blur-3xl opacity-50"></div>
       </div>
 
-      {/* Main Content Area */}
-      <main className="flex-1 flex flex-col h-screen overflow-hidden">
-
-        {/* Mobile Header */}
-        <header className="md:hidden h-16 bg-white border-b border-slate-200 flex items-center justify-between px-4 shrink-0">
-          <span className="font-bold text-lg">Artist<span className="text-brand-600">Paddy</span></span>
-          <button onClick={() => setMobileMenuOpen(!mobileMenuOpen)} className="p-2 text-slate-600">
-            <Menu />
-          </button>
-        </header>
-
-        {/* Mobile Sidebar Overlay (Simplified) */}
-        {mobileMenuOpen && (
-          <div className="md:hidden absolute inset-0 z-50 bg-slate-900/50 backdrop-blur-sm" onClick={() => setMobileMenuOpen(false)}>
-            <div className="w-64 h-full bg-white p-4" onClick={(e) => e.stopPropagation()}>
-              <Sidebar activeTab={activeTab} setActiveTab={(t) => { setActiveTab(t); setMobileMenuOpen(false); }} />
-            </div>
+      {/* Navbar */}
+      <nav
+        className={`fixed z-50 transition-all duration-300 ease-[cubic-bezier(0.25,0.1,0.25,1.0)] left-1/2 -translate-x-1/2 ${isScrolled
+          ? 'top-4 w-[90%] max-w-2xl bg-white/90 backdrop-blur-md rounded-full px-6 py-3 shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-white/20'
+          : 'top-0 w-full px-6 py-6 bg-transparent border-transparent'
+          }`}
+      >
+        <div className={`mx-auto flex items-center justify-between ${isScrolled ? 'w-full' : 'max-w-7xl'}`}>
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="ArtistPaddy Logo" className="w-8 h-8 object-contain" />
+            <span className={`text-xl font-bold tracking-tight ${isScrolled ? 'text-lg' : ''}`}>
+              Artist<span className="text-indigo-600">Paddy</span>
+            </span>
           </div>
-        )}
 
-        {/* Scrollable Content */}
-        <div className="flex-1 overflow-y-auto p-4 md:p-8 lg:p-12">
-          <div className="max-w-6xl mx-auto">
-            {renderContent()}
+
+
+          <div className="flex items-center gap-4">
+            <Link href="/signin" className="hidden md:block text-sm font-semibold hover:text-indigo-600 transition-colors">
+              Sign In
+            </Link>
+            <Link
+              href="/dashboard"
+              className={`text-sm font-semibold rounded-full transition-all flex items-center gap-2 shadow-lg ${isScrolled
+                ? 'px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20'
+                : 'px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white shadow-indigo-500/20'
+                }`}
+            >
+              Launch App
+            </Link>
           </div>
         </div>
+      </nav>
 
-      </main>
+      {/* Hero Section */}
+      <section className="relative z-10 pt-32 pb-20 px-4">
+        <div className="max-w-4xl mx-auto text-center animate-fade-in">
+
+          <div className="inline-flex items-center gap-2 px-3 py-1 bg-white border border-slate-200 rounded-full shadow-sm mb-8 animate-delay-100">
+            <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></span>
+            <span className="text-xs font-semibold text-slate-600 uppercase tracking-wider">New: AI Contract Analysis</span>
+          </div>
+
+          <h1 className="text-5xl md:text-7xl font-bold tracking-tight text-slate-900 mb-6 leading-[1.1] animate-delay-200">
+            Your Personal <span className="text-indigo-600 font-serif italic">Music Lawyer</span> <br />
+            <span className="text-slate-400">&amp;</span> Deal Simulator
+          </h1>
+
+          <p className="text-lg md:text-xl text-slate-500 mb-10 max-w-2xl mx-auto leading-relaxed animate-delay-300">
+            Protect your rights and visualize your financial future.
+            Analyze contracts instantly and simulate deal splits before you sign.
+          </p>
+
+          <div className="flex flex-col md:flex-row items-center justify-center gap-4 animate-delay-300">
+            <Link
+              href="/dashboard"
+              className="px-8 py-4 bg-indigo-600 hover:bg-indigo-700 text-white rounded-full font-bold text-lg shadow-xl shadow-indigo-500/30 transition-all hover:scale-105 flex items-center gap-2"
+            >
+              Get Started Free <ArrowRight size={20} />
+            </Link>
+
+          </div>
+
+
+        </div>
+      </section>
+
+      {/* Services/Features Grid */}
+      <section id="features" className="relative z-10 py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          <div className="text-center mb-16">
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 tracking-tight">
+              Why you should use ArtistPaddy as an artist
+            </h2>
+            <p className="mt-4 text-lg text-slate-500 max-w-2xl mx-auto leading-relaxed">
+              We empower you with the same legal and financial insights major labels use, so you can sign confidently and build a sustainable career.
+            </p>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+            {/* Card 1 */}
+            <div className="bg-pink-50/80 p-8 rounded-3xl border border-pink-100 hover:shadow-xl hover:shadow-pink-500/10 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                <Calculator className="text-pink-500" size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-slate-900">Deal Simulator</h3>
+              <p className="text-slate-600 leading-relaxed mb-6">
+                Calculate your actual earnings from any record deal. Visualize splits, recoupment, and advances instantly.
+              </p>
+              <Link href="/dashboard" className="inline-flex items-center text-sm font-bold text-pink-600 group-hover:gap-2 transition-all">
+                Try Simulator <ArrowRight size={16} className="ml-1" />
+              </Link>
+            </div>
+
+            {/* Card 2 */}
+            <div className="bg-emerald-50/80 p-8 rounded-3xl border border-emerald-100 hover:shadow-xl hover:shadow-emerald-500/10 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                <Shield className="text-emerald-500" size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-slate-900">Legal Guard AI</h3>
+              <p className="text-slate-600 leading-relaxed mb-6">
+                Instant contract reviews. Get a plain English explanation of predatory clauses and protect your rights.
+              </p>
+              <Link href="/dashboard" className="inline-flex items-center text-sm font-bold text-emerald-600 group-hover:gap-2 transition-all">
+                Ask Legal Guard <ArrowRight size={16} className="ml-1" />
+              </Link>
+            </div>
+
+            {/* Card 3 */}
+            <div className="bg-sky-50/80 p-8 rounded-3xl border border-sky-100 hover:shadow-xl hover:shadow-sky-500/10 transition-all duration-300 group">
+              <div className="w-14 h-14 bg-white rounded-full flex items-center justify-center mb-6 shadow-sm group-hover:scale-110 transition-transform duration-300">
+                <BookOpen className="text-sky-500" size={24} />
+              </div>
+              <h3 className="text-xl font-bold mb-3 text-slate-900">Artist Academy</h3>
+              <p className="text-slate-600 leading-relaxed mb-6">
+                Learn the business. Access guides on royalties, publishing, and distribution to stay independent.
+              </p>
+              <Link href="/dashboard" className="inline-flex items-center text-sm font-bold text-sky-600 group-hover:gap-2 transition-all">
+                Start Learning <ArrowRight size={16} className="ml-1" />
+              </Link>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* Big Feature Showcase (Dark Mode Style) */}
+      <section id="tools" className="relative z-10 py-20 px-4">
+        <div className="max-w-6xl mx-auto">
+          {/* Big Feature Showcase (Dark Mode Style) */}
+          <section id="cta" className="relative z-10 py-20 px-4">
+            <div className="max-w-6xl mx-auto">
+              <div className="bg-black rounded-[2.5rem] p-12 md:p-20 relative overflow-hidden text-center">
+
+                {/* Background Glow */}
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full h-full max-w-3xl bg-indigo-900/40 blur-[120px] rounded-full pointer-events-none"></div>
+
+                <div className="relative z-10 max-w-3xl mx-auto">
+                  <h2 className="text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+                    Ready to Sign Your Best Deal?
+                  </h2>
+                  <p className="text-xl text-slate-400 mb-10 leading-relaxed">
+                    Don't leave your music career to chance. Join ArtistPaddy today and get the legal superpowers used by major labels.
+                  </p>
+
+                  <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                    <Link
+                      href="/signup"
+                      className="w-full sm:w-auto px-8 py-4 bg-white hover:bg-slate-200 text-black rounded-full font-bold text-lg transition-all transform hover:scale-105 shadow-xl shadow-white/10"
+                    >
+                      Create Free Account
+                    </Link>
+
+                  </div>
+
+                  <p className="mt-8 text-sm text-slate-500">
+                    No credit card required • Free tier available
+                  </p>
+                </div>
+
+              </div>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="bg-white border-t border-slate-200 py-12 px-4 mt-20">
+        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-2">
+            <img src="/logo.png" alt="ArtistPaddy Logo" className="w-6 h-6 object-contain" />
+            <span className="font-bold">ArtistPaddy</span>
+          </div>
+
+          <div className="flex gap-8 text-sm text-slate-500">
+            <Link href="#" className="hover:text-black">Privacy Policy</Link>
+            <Link href="#" className="hover:text-black">Terms of Service</Link>
+            <Link href="#" className="hover:text-black">Support</Link>
+          </div>
+
+          <div className="text-sm text-slate-400">
+            &copy; {new Date().getFullYear()} ArtistPaddy. All rights reserved.
+          </div>
+        </div>
+      </footer>
 
     </div>
-  );
-}
-
-export default function Home() {
-  return (
-    <LanguageProvider>
-      <Dashboard />
-    </LanguageProvider>
   );
 }
