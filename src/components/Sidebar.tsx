@@ -30,10 +30,13 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                 const res = await fetch('/api/auth/me');
                 if (res.ok) {
                     const data = await res.json();
-                    setUserName(data.user?.name || '');
+                    setUserName(data.user?.name || 'Artist');
+                } else {
+                    setUserName('Artist');
                 }
             } catch (error) {
                 console.error('Failed to fetch user:', error);
+                setUserName('Artist');
             }
         };
         fetchUser();
@@ -55,10 +58,10 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
 
                 {/* Brand */}
                 <div className="p-8 pb-4 shrink-0">
-                    <h1 className="font-bold text-2xl tracking-tight text-slate-900 flex items-center gap-3">
+                    <Link href="/dashboard" className="font-bold text-2xl tracking-tight text-slate-900 flex items-center gap-3 hover:opacity-80 transition-opacity">
                         <img src="/logo.png" alt="Logo" className="w-10 h-10 object-contain" />
                         <span>ArtistPaddy</span>
-                    </h1>
+                    </Link>
                 </div>
 
                 {/* Navigation */}
@@ -117,7 +120,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
 
             {/* Logout Confirmation Modal */}
             {showLogoutModal && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
+                <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 animate-in fade-in duration-200">
                     <div className="bg-white w-full max-w-sm rounded-2xl shadow-2xl p-6 space-y-4 animate-in zoom-in-95 duration-200">
                         <div className="text-center space-y-2">
                             <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto text-red-600">
@@ -138,7 +141,7 @@ export default function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
                             <button
                                 onClick={async () => {
                                     await fetch('/api/auth/logout', { method: 'POST' });
-                                    window.location.href = '/signin';
+                                    window.location.href = '/';
                                 }}
                                 className="px-4 py-2.5 rounded-xl bg-red-600 text-white font-semibold hover:bg-red-700 transition-colors text-center"
                             >

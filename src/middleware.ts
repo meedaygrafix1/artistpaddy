@@ -21,8 +21,8 @@ export async function middleware(request: NextRequest) {
 
     // If path is public, verify token (optional: redirect logged-in users away from signin)
     if (publicPaths.includes(pathname)) {
-        if (token && (pathname === '/signin' || pathname === '/signup' || pathname === '/')) {
-            // Optional: Redirect logged in users to dashboard
+        // Only redirect from signin/signup pages. Allow landing page access.
+        if (token && (pathname === '/signin' || pathname === '/signup')) {
             return NextResponse.redirect(new URL('/dashboard', request.url));
         }
         return NextResponse.next();

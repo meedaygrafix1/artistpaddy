@@ -54,8 +54,8 @@ export default function SignUpPage() {
                 throw new Error(data.message || 'Something went wrong');
             }
 
-            // Redirect to sign in (or dashboard)
-            router.push('/signin');
+            // Redirect to dashboard
+            router.push('/dashboard');
         } catch (err: any) {
             setError(err.message);
         } finally {

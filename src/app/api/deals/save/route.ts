@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { verifyJWT } from '@/lib/auth';
 import connectToDatabase from '@/lib/mongodb';
 import User from '@/models/User';
+import Deal from '@/models/Deal';
 
 export async function POST(request: Request) {
     try {
@@ -19,9 +20,22 @@ export async function POST(request: Request) {
         }
 
         const body = await request.json();
-        const { isHighRisk } = body;
+        const { dealName, advance, royaltySplit, verdict, isHighRisk } = body;
+
+        if (!dealName) {
+            return NextResponse.json({ error: 'Deal name is required' }, { status: 400 });
+        }
 
         await connectToDatabase();
+
+        // Save deal history
+        await Deal.create({
+            userId: payload.id,
+            dealName,
+            advance,
+            royaltySplit,
+            status: verdict
+        });
 
         // Update user stats
         await User.findByIdAndUpdate(payload.id, {

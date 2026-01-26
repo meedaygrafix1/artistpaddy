@@ -255,6 +255,7 @@ export default function DealSimulator() {
 
                 </div>
 
+
                 {/* OUTPUTS SECTION */}
                 <div className="space-y-6">
 
@@ -277,28 +278,54 @@ export default function DealSimulator() {
                             <span className="text-xs font-bold text-slate-900">{contractType}</span>
                         </div>
 
-                        <div className="mt-6">
+                        <div className="mt-8 pt-6 border-t border-slate-100">
+                            <div className="mb-4">
+                                <label className="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">
+                                    {translate("Name this deal (Optional)", "Give am name (Optional)")}
+                                </label>
+                                <input
+                                    type="text"
+                                    placeholder="e.g. Sony Contract 2026"
+                                    className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:outline-none focus:border-slate-400 transition-colors"
+                                    id="dealNameInput"
+                                />
+                            </div>
                             <button
                                 onClick={async () => {
+                                    const nameInput = document.getElementById('dealNameInput') as HTMLInputElement;
+                                    const dealName = nameInput.value || `Deal Analysis ${new Date().toLocaleDateString()}`;
                                     const isHighRisk = yearsToRecoup > 5 || royaltySplit < 15;
+
                                     try {
                                         const res = await fetch('/api/deals/save', {
                                             method: 'POST',
                                             headers: { 'Content-Type': 'application/json' },
-                                            body: JSON.stringify({ isHighRisk })
+                                            body: JSON.stringify({
+                                                dealName,
+                                                advance,
+                                                royaltySplit,
+                                                verdict: verdict.label,
+                                                isHighRisk
+                                            })
                                         });
                                         if (res.ok) {
                                             alert(translate("Analysis Saved!", "We don save ham!"));
+                                            nameInput.value = ''; // Reset input
+                                        } else {
+                                            const data = await res.json();
+                                            alert(data.error || 'Failed to save');
                                         }
                                     } catch (err) {
                                         console.error(err);
+                                        alert('Error saving deal');
                                     }
                                 }}
-                                className="px-6 py-2 bg-slate-900 text-white text-sm font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10"
+                                className="w-full py-3 bg-slate-900 text-white font-bold rounded-xl hover:bg-slate-800 transition-colors shadow-lg shadow-slate-900/10 flex items-center justify-center gap-2"
                             >
-                                {translate("Save Analysis", "Save This One")}
+                                <span>{translate("Save to History", "Save to History")}</span>
                             </button>
                         </div>
+
                     </div>
 
                     {/* Stats Grid */}
@@ -351,6 +378,6 @@ export default function DealSimulator() {
 
                 </div>
             </div>
-        </div >
+        </div>
     );
 }

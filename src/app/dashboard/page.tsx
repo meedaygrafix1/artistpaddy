@@ -14,25 +14,35 @@ function Dashboard() {
     const [userName, setUserName] = useState('');
 
     const [stats, setStats] = useState({ dealsChecked: 0, highRisk: 0 });
+    const [recentDeals, setRecentDeals] = useState<any[]>([]);
 
-    // Fetch user data on mount
+    // Fetch user data and history on mount
     useEffect(() => {
-        const fetchUser = async () => {
+        const fetchData = async () => {
             try {
-                const res = await fetch('/api/auth/me');
-                if (res.ok) {
-                    const data = await res.json();
+                // User & Stats
+                const userRes = await fetch('/api/auth/me');
+                if (userRes.ok) {
+                    const data = await userRes.json();
                     setUserName(data.user?.name || '');
                     setStats({
                         dealsChecked: data.user?.dealsChecked || 0,
                         highRisk: data.user?.highRiskDealsFound || 0
                     });
                 }
+
+                // History
+                const historyRes = await fetch('/api/deals/history');
+                if (historyRes.ok) {
+                    const hData = await historyRes.json();
+                    setRecentDeals(hData.deals || []);
+                }
+
             } catch (error) {
-                console.error('Failed to fetch user:', error);
+                console.error('Failed to fetch data:', error);
             }
         };
-        fetchUser();
+        fetchData();
     }, []);
 
     // Content Renderer
@@ -124,7 +134,10 @@ function Dashboard() {
                                         <span className="font-mono font-bold text-slate-900">{stats.dealsChecked}</span>
                                     </div>
                                     <div className="w-full bg-white/60 h-2 rounded-full overflow-hidden">
-                                        <div className="bg-amber-400 w-[60%] h-full rounded-full"></div>
+                                        <div
+                                            className="bg-amber-400 h-full rounded-full transition-all duration-1000 ease-out"
+                                            style={{ width: `${Math.min((stats.dealsChecked / 10) * 100, 100)}%` }}
+                                        ></div>
                                     </div>
                                     <div className="flex justify-between items-center">
                                         <span className="text-sm text-slate-600">Risk Averted</span>
@@ -135,6 +148,63 @@ function Dashboard() {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Recent History Table */}
+                        <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
+                            <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
+                                <h3 className="font-bold text-slate-900">{translate("Recent Simulations", "Recent Deals Wey You Check")}</h3>
+                            </div>
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left text-sm">
+                                    <thead className="bg-slate-50 text-slate-500 font-semibold uppercase tracking-wider text-xs">
+                                        <tr>
+                                            <th className="px-6 py-3">Date</th>
+                                            <th className="px-6 py-3">Deal Name</th>
+                                            <th className="px-6 py-3">Split (You)</th>
+                                            <th className="px-6 py-3">Advance</th>
+                                            <th className="px-6 py-3">Verdict</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody className="divide-y divide-slate-100">
+                                        {recentDeals.length === 0 ? (
+                                            <tr>
+                                                <td colSpan={5} className="px-6 py-8 text-center text-slate-500">
+                                                    {translate("No recent simulations found.", "You never check any deal yet.")}
+                                                </td>
+                                            </tr>
+                                        ) : (
+                                            recentDeals.map((deal: any) => (
+                                                <tr key={deal._id} className="hover:bg-slate-50/80 transition-colors">
+                                                    <td className="px-6 py-4 text-slate-500 font-mono text-xs">
+                                                        {new Date(deal.createdAt).toLocaleDateString()}
+                                                    </td>
+                                                    <td className="px-6 py-4 font-medium text-slate-900">
+                                                        {deal.dealName}
+                                                    </td>
+                                                    <td className="px-6 py-4 text-slate-700">
+                                                        {deal.royaltySplit}%
+                                                    </td>
+                                                    <td className="px-6 py-4 text-slate-700 font-mono">
+                                                        ₦{Number(deal.advance).toLocaleString()}
+                                                    </td>
+                                                    <td className="px-6 py-4">
+                                                        <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${deal.status.includes('High Risk') || deal.status.includes('RUN') || deal.status.includes('BAD')
+                                                            ? 'bg-red-100 text-red-700'
+                                                            : deal.status.includes('LEGENDARY')
+                                                                ? 'bg-emerald-100 text-emerald-700'
+                                                                : 'bg-slate-100 text-slate-700'
+                                                            }`}>
+                                                            {deal.status}
+                                                        </span>
+                                                    </td>
+                                                </tr>
+                                            ))
+                                        )}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
                     </div>
                 );
 
@@ -232,7 +302,7 @@ function Dashboard() {
         <div className="flex min-h-screen bg-slate-50 font-sans text-slate-900 selection:bg-brand-500 selection:text-white">
 
             {/* Sidebar (Desktop) */}
-            <div className="hidden md:block w-64 h-screen sticky top-0">
+            <div className="hidden md:block w-64 h-screen sticky top-0 z-40">
                 <Sidebar activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
 
