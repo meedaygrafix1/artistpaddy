@@ -38,6 +38,7 @@ export default function SignInPage() {
       // Redirect to dashboard
       if (res.ok) {
         console.log('User signed in successfully');
+        router.refresh();
         router.push('/dashboard');
       }
     } catch (err: any) {
