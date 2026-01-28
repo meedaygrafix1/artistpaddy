@@ -55,7 +55,9 @@ export default function SignUpPage() {
             }
 
             // Redirect to dashboard
-            router.push('/dashboard');
+            if (res.ok) {
+                router.push('/dashboard');
+            }
         } catch (err: any) {
             setError(err.message);
         } finally {
